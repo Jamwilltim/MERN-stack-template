@@ -7,12 +7,26 @@ const notFound = (req, res, next) => {
 
 // Central error handler
 const errorHandler = (err, req, res, next) => {
-	// If a status code was already set (e.g. res.status(400) before throwing), use it.
-	// Otherwise default to 500.
-	const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+	let statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+	let message = err.message || "Server error";
+
+	// Mongoose validation error
+	if (err.name === "ValidationError") {
+		statusCode = 400;
+		message = Object.values(err.errors)
+			.map((val) => val.message)
+			.join(", ");
+	}
+
+	// Mongoose duplicate key error (e.g. unique email)
+	if (err.code === 11000) {
+		statusCode = 400;
+		const field = Object.keys(err.keyValue)[0];
+		message = `${field} already in use`;
+	}
 
 	res.status(statusCode).json({
-		message: err.message || "Server error",
+		message: message || "Server error",
 		stack: process.env.NODE_ENV === "production" ? undefined : err.stack,
 	});
 };
