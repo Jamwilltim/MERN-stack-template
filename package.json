@@ -1,0 +1,15 @@
+{
+	"name": "mern-template",
+	"version": "1.0.0",
+	"description": "Reusable MERN stack starter template with JWT auth, Tailwind v4, and TypeScript frontend",
+	"private": true,
+	"scripts": {
+		"install:all": "npm install --prefix server && npm install --prefix client",
+		"dev:server": "npm run dev --prefix server",
+		"dev:client": "npm run dev --prefix client",
+		"dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
+	},
+	"devDependencies": {
+		"concurrently": "^9.0.0"
+	}
+}
