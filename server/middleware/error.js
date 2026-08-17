@@ -10,7 +10,6 @@ const errorHandler = (err, req, res, next) => {
 	let statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
 	let message = err.message || "Server error";
 
-	// Mongoose validation error
 	if (err.name === "ValidationError") {
 		statusCode = 400;
 		message = Object.values(err.errors)
@@ -18,15 +17,19 @@ const errorHandler = (err, req, res, next) => {
 			.join(", ");
 	}
 
-	// Mongoose duplicate key error (e.g. unique email)
 	if (err.code === 11000) {
 		statusCode = 400;
 		const field = Object.keys(err.keyValue)[0];
 		message = `${field} already in use`;
 	}
 
+	// Log unexpected server errors — not routine 400/401/404s
+	if (statusCode >= 500) {
+		console.error(err.stack);
+	}
+
 	res.status(statusCode).json({
-		message: message || "Server error",
+		message,
 		stack: process.env.NODE_ENV === "production" ? undefined : err.stack,
 	});
 };
