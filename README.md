@@ -22,7 +22,7 @@ A reusable full-stack starter with JWT authentication, MongoDB/Mongoose, Express
 ### 1. Clone and install
 
 ```bash
-git clone <this-repo> my-new-app
+git clone "https://github.com/Jamwilltim/MERN-stack-template.git" my-new-app
 cd my-new-app
 npm run install:all
 ```
