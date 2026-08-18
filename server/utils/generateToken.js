@@ -5,3 +5,5 @@ const generateToken = (id) => {
 		expiresIn: "30d", // Token expires in 30 days
 	});
 };
+
+module.exports = generateToken;
